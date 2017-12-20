@@ -43,12 +43,16 @@ public class TextValue extends IValue<CharSequence> implements Parcelable {
 	}
 
 	public void setTextColor(int color) {
+		if (paint == null)
+			paint = new Paint();
 		paint.setColor(color);
 	}
 
 	public TextValue(Parcel in) {
 
 		String value = in.readString();
+		if (paint == null)
+			paint = new Paint();
 		paint.setColor(in.readInt());
 		paint.setTextSize(in.readFloat());
 		setValue(value);
@@ -96,7 +100,8 @@ public class TextValue extends IValue<CharSequence> implements Parcelable {
 	}
 
 	@Override public void calculateBounds() {
-		paint.getTextBounds(value.toString(), 0, value.length(), bounds);
+		if (paint != null)
+			paint.getTextBounds(value.toString(), 0, value.length(), bounds);
 	}
 
 	@Override public int describeContents() {
@@ -104,6 +109,8 @@ public class TextValue extends IValue<CharSequence> implements Parcelable {
 	}
 
 	@Override public void writeToParcel(Parcel dest, int flags) {
+		if (paint == null)
+			paint = new Paint();
 		dest.writeString(value.toString());
 		dest.writeInt(paint.getColor());
 		dest.writeFloat(paint.getTextSize());
